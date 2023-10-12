@@ -66,24 +66,41 @@ module.exports = {
                 .json({ error: true, message: "Internal Server Error" });
         }
     },
-    getAccountById: async(req, res) => {
+    getAccountsId: async(req, res) => {
+        const id = parseInt(req.params.id);
+
         try {
-            const accounts = await prisma.bank_accounts.findUnique({
+            const account = await prisma.bank_accounts.findUnique({
                 where: {
-                    id: Number(req.params.accountId)
+                    id: id,
                 },
                 include: {
                     user: true,
                 },
             });
-            res.status(201).json({
-                ...accounts,
-                balance: parseInt(accounts.balance)
-            })
+
+            if (!account) {
+                return res.status(404).json({ error: 'Account not found!' });
+            }
+
+            const accountData = {
+                id: account.id,
+                bank_name: account.bank_name,
+                bank_account_number: account.bank_account_number,
+                balance: Number(account.balance),
+                user: account.user,
+            };
+
+            return res.json({
+                data: accountData,
+                message: "account data find"
+            });
         } catch (error) {
-            res.status(500).json({ msg: error.message });
+            console.error(error);
+            return res.status(500).json({ error: 'Error fetching account details!' });
         }
     },
+
     editAccount: async(req, res) => {
         const id = req.params.id;
         const accounData = req.body;

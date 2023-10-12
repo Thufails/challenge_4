@@ -35,6 +35,8 @@ router.delete('/users/:id', userControllers.deleteUser)
 router.post('/accounts', accountControllers.registerAccounts)
     //GET ACCOUNT
 router.get('/accounts', accountControllers.getAccounts)
+    //GET BY ID
+router.get('/accounts/:id', accountControllers.getAccountsId)
     //EDIT ACCOUNT
 router.put('/accounts/:id', accountControllers.editAccount)
 router.delete('/accounts/:id', accountControllers.deleteAccount)
